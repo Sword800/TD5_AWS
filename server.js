@@ -8,6 +8,8 @@ var knex = require('knex')({
     debug: true,
     useNullAsDefault: true
 });
+
+var session = require('express-session');
 // init project
 
 const express = require('express');
@@ -23,7 +25,13 @@ require('express-async-errors');
 app
     .use(bodyP.urlencoded({ extended: false }))
     .use(cookieP())
-    .use('/s', express.static('public'));
+    .use('/s', express.static('public'))
+    .use(session({
+    secret: '12345',
+    resave: false,
+    saveUninitialized: false,
+}));
+
 
 const consolidate = require('consolidate');
 app.engine('html', consolidate.nunjucks);
@@ -36,14 +44,39 @@ app.get('/', function(req, res) {
 });
 
 // http://expressjs.com/en/starter/basic-routing.html
+app.post('/',async function(req, res) {
+  
+  req.session.user = req.body.login;
+  
+  try{
+    
+  var utilisateurs = await knex('users').where({'login':req.session.user,'pass':req.body.pass});
+  
+  if(req.session.user == utilisateurs[0].login && req.body.pass == utilisateurs[0].pass)
+  {
+    req.session.user=utilisateurs[0].login;
+    req.body.pass=utilisateurs[0].pass;
+    res.redirect('/userlist');
+  }
+  }
+  catch (err) {   
+   res.redirect('/');
+  }
+  
+});
+
+// http://expressjs.com/en/starter/basic-routing.html
 app.get('/signin',async function(req, res) {
   res.sendFile(__dirname + '/views/signin.html');
 });
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.post('/signin',async function(req, res) {
+  if(req.body.login != '' && req.body.pass != '')
+  {
   var add_jojo = await knex.raw('INSERT INTO users VALUES (?, ?, ?, ?, ?)',
                [ req.body.login, req.body.pass, req.body.name, req.body.fav, req.body.sec]);
+  }
  res.redirect('/signin');
 });
 
