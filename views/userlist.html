@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <title>A static file</title>
+  </head>
+  <body>
+    
+
+    
+    <table>
+       <tr>
+         <td>Login</td> 
+        <td>Name</td> 
+        <td>Color</td> 
+      </tr>
+ {% for l in liste %}    
+      <tr>
+        <td>{{ l.login }}  </td> 
+        <td>{{ l.name }}  </td> 
+    
+
+        
+        <td style="background-color: {{ l.color1 }}; height: 20px; width:20px;"> </td> 
+      </tr>
+     
+ {% endfor %}
+</table>
+  </body>
+    
+</html>
