@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <title>A static file</title>
+  </head>
+ <body>
+    <h1>
+      Hello Form!
+    </h1>
+    
+     <form action="/signin" method="POST">
+      
+      <div>
+        <input type="text" id="login" name="login" required placeholder="Choose a login">
+    </div>
+       
+         <div>
+        <input type="text" id="pass" name="pass" required placeholder="Choose a password">
+    </div>
+       
+        <div>
+        <input type="text" id="name" name="name" required placeholder="Choose a name">
+    </div>
+       <div>
+          <label for="color">Choose a color favorite and secondary</label><br />
+       </div>
+         <div>
+        <input type="color" id="fav" name="fav" required placeholder="Choose a color fav">
+    </div>
+       
+         <div>
+        <input type="color" id="sec" name="sec" required placeholder="Choose a sec color">
+    </div>
+       
+      <div class="go">
+        <button type="submit">Go</button>
+    </div>
+    </form>
+  </body>
+    
+</html>
