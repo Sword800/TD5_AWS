@@ -15,8 +15,19 @@
       </tr>
  {% for l in liste %}    
       <tr>
+        {% if l.login == test %}
+        
+        <td><strong>{{ l.login }} </strong> </td>
+        <td>{{ l.name }}  </td> 
+        
+        {% else %}
+        
         <td>{{ l.login }}  </td> 
         <td>{{ l.name }}  </td> 
+        
+      
+        {% endif %}
+          
     
 
         
@@ -25,6 +36,8 @@
      
  {% endfor %}
 </table>
+    
+    <a href="{{link}}">Logout</a>
   </body>
     
 </html>
