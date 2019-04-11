@@ -40,26 +40,33 @@ app.set('views', './views');
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get('/', function(req, res) {
+  
+  if(req.session.user)
+  {
+    res.redirect('/userlist');
+  }
+  else
+  {
   res.sendFile(__dirname + '/views/index.html');
+  }
 });
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.post('/',async function(req, res) {
   
-  req.session.user = req.body.login;
   
   try{
     
-  var utilisateurs = await knex('users').where({'login':req.session.user,'pass':req.body.pass});
+  var utilisateurs = await knex('users').where({'login':req.body.login,'pass':req.body.pass});
   
-  if(req.session.user == utilisateurs[0].login && req.body.pass == utilisateurs[0].pass)
+  if(utilisateurs[0].login != null)
   {
     req.session.user=utilisateurs[0].login;
     req.body.pass=utilisateurs[0].pass;
     res.redirect('/userlist');
   }
   }
-  catch (err) {   
+  catch (err) {  
    res.redirect('/');
   }
   
@@ -82,14 +89,24 @@ app.post('/signin',async function(req, res) {
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get('/logout', function(req, res) {
+  req.body.login = null;
+  req.session.user = req.body.login;
   res.sendFile(__dirname + '/views/index.html');
 });
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get('/userlist', async function(req, res) {
-  let aff = await knex('users').select('login','name','color1');
-  console.log(aff);
-  res.render('userlist.html',{'liste': aff})
+  
+  if(!req.session.user)
+  {
+    res.redirect('/');
+  }
+  else
+  {
+    let aff = await knex('users').select('login','name','color1');
+  //console.log(aff);
+  res.render('userlist.html',{'liste': aff,'test': req.session.user,'link': '/logout' })
+  }
 
 });
 
